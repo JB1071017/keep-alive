@@ -1,0 +1,20 @@
+name: Automated Empty Commit
+
+on:
+  schedule:
+    - cron: "0 9 * * *"   # Runs every day at 09:00 UTC
+  workflow_dispatch:       # Allows manual trigger
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create empty commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "Automated contribution $(date -u +'%Y-%m-%d %H:%M:%S UTC')" || echo "No commit"
+          git push
