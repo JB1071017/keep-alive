@@ -70,14 +70,12 @@ jobs:
               " ": ["00000","00000","00000","00000","00000","00000","00000"]
           }
 
-          def next_sunday(today=None):
-              if today is None:
-                  today = datetime.date.today()
-              days_ahead = (6 - today.weekday()) % 7
-              return today + datetime.timedelta(days=days_ahead)
+          def anchor_sunday():
+              # Fixed anchor point (first Sunday of 2025)
+              return datetime.date(2025, 1, 5)
 
           def get_dates(message):
-              start_date = next_sunday()
+              start_date = anchor_sunday()
               commit_dates = []
               col_offset = 0
               for ch in message.upper():
