@@ -104,8 +104,15 @@ jobs:
                   f.write("DO_COMMIT=false\n")
           PYCODE
 
-      - name: Create empty commit if today matches
+      - name: Multi commits if today matches
         if: steps.gen.outputs.DO_COMMIT == 'true'
         run: |
-          git commit --allow-empty -m "Word commit for $(date -u +'%Y-%m-%d')" || echo "No commit"
+          NUM=$(( (RANDOM % 5) + 1 ))   # 1–5 commits
+          echo "Making $NUM commits today"
+          for i in $(seq 1 $NUM); do
+            echo "$(date) - $RANDOM" >> random.txt
+            git add random.txt
+            git commit -m "Word/random commit $i on $(date -u +'%Y-%m-%d')" || echo "No commit"
+            sleep $((RANDOM % 600))   # wait up to 10 min between commits
+          done
           git push
